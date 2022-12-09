@@ -1,8 +1,8 @@
 WebDriverIO Docs:
     https://webdriver.io/docs/api    
 
-    Plugin for CUCUMBER AUTOCOMPLETE and SD-Link:
-        Cucumber (Gherkin) Full Support
+Plugin for CUCUMBER AUTOCOMPLETE and SD-Link:
+    Cucumber (Gherkin) Full Support
 
 EXECUTION:
     To run all feature files:
@@ -13,6 +13,15 @@ EXECUTION:
 
         eg:
         npx wdio wdio.conf.js --spec ./features/Facebook/login.feature 
+
+    To run scenarios using tagName:
+        npx wdio wdio.conf.js --cucumberOpts.tagExpression '@tag1'
+
+        eg:
+        npx wdio wdio.conf.js --cucumberOpts.tagExpression '@imp'
+        npx wdio wdio.conf.js --cucumberOpts.tagExpression '@login-2 or @imp'
+        npx wdio wdio.conf.js --cucumberOpts.tagExpression '@login-2 and @imp'
+        npx wdio wdio.conf.js --cucumberOpts.tagExpression 'not @login'
 
 AUTO-COMPLETION:
     1. Create file jsconfig.json
@@ -29,3 +38,27 @@ AUTO-COMPLETION:
                 "node_modules"
             ]
         }
+
+CROSS BROWSER TESTING:
+    To install selenium-standalone service:
+        npm install @wdio/selenium-standalone-service --save-dev
+
+    To add firefox-profile-services:
+        npm install @wdio/firefox-profile-service --save-dev
+    
+    To use selenium-standalone as services:
+        in wdio.conf.js:
+            service: ['selenium-standalone'],
+
+    To run testcases in cross-browser testing:
+        in wdio.conf.js:
+            capabilities: [{
+                maxInstances: 5,
+                browserName: 'chrome',
+                acceptInsecureCerts: true
+            },
+            {
+                maxInstances: 5,
+                browserName: 'firefox',
+                acceptInsecureCerts: true
+            }],

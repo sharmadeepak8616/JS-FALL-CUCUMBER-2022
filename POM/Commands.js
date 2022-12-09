@@ -9,6 +9,7 @@ class Commands {
     getText
     cilck
     $
+    $$
     getAttribute
     isDisplayed
     isEnabled
@@ -24,6 +25,10 @@ class Commands {
      * input: string(locator)
      */
     async findWebElement(locator) {
+        await $(locator).waitForDisplayed({
+            timeout: 60000,
+            timeoutMsg: 'WebElement is not displayed'
+        })
         return await $(locator);
     }
 
@@ -32,6 +37,13 @@ class Commands {
      * input: string(locator)
      */
     async findAllWebElement(locator) {
+        await browser.waitUntil(async () => {
+            const totalElements = await $$(locator);
+            return totalElements.length >= 1
+        }, {
+            timeout: 60000,
+            timeoutMsg: 'No more than one element'
+        });
         return await $$(locator);
     }
 
@@ -48,6 +60,10 @@ class Commands {
 
             do above flow for 30-seconds
         */
+        await $(locator).waitForEnabled({
+            timeout: 30000,
+            timeoutMsg: 'Element is not enabled'
+        });
         await $(locator).setValue(dataToEnter);
     }
 
@@ -64,6 +80,10 @@ class Commands {
 
             do above flow for 30-seconds
         */
+        await $(locator).waitForClickable({
+            timeout: 30000,
+            timeoutMsg: 'Element is not clickable'
+        });
         await $(locator).click();
     }
 
@@ -80,6 +100,10 @@ class Commands {
 
             do above flow for 30-seconds
         */
+       await $(locator).waitForEnabled({
+            timeout:120000,
+            timeoutMsg: 'Element is not enabled'
+        });
         return await $(locator).isEnabled();
     }
 
@@ -96,6 +120,10 @@ class Commands {
 
             do above flow for 30-seconds
         */
+       await $(locator).waitForDisplayed({
+            timeout:120000,
+            timeoutMsg: 'Element is not displayed'
+        });
         return await $(locator).getText();
     }
 
@@ -112,6 +140,10 @@ class Commands {
 
             do above flow for 30-seconds
         */
+       await $(locator).waitForExist({
+            timeout:120000,
+            timeoutMsg: 'Element is not exist'
+        });
         return await $(locator).getAttribute(attrName);
     }
 
@@ -121,6 +153,10 @@ class Commands {
      * input: locatorDropdown, valueWantToSelect
      */
     async selectDataInDropdown(locator, dataToSelect) {
+        await $(locator).waitForDisplayed({
+            timeout:120000,
+            timeoutMsg: 'Element is not displayed'
+        });
         const dropdown = await $(locator);
         dropdown.selectByVisibleText(dataToSelect);
     }
@@ -131,6 +167,10 @@ class Commands {
      * input: locator
      */
     async moveMouseOn(locator) {
+        await $(locator).waitForExist({
+            timeout:120000,
+            timeoutMsg: 'Element is not exist'
+        });
         await $(locator).moveTo();
     }
 
@@ -169,6 +209,14 @@ class Commands {
      * input: locator (for all suggestions), userLikeToSelect
      */
     async selectFromAutoSuggestion(locator, userLikeToSelect) {
+        await browser.waitUntil(async () => {
+            const totalSuggestions = await $$(locator);
+            return totalSuggestions.length >= 1
+        }, {
+            timeout: 60000,
+            timeoutMsg: 'Number of auto-suggestions are not 1 or more'
+        });
+
         const allSuggestions = await $$(locator);
         for (const suggestion of allSuggestions) {
             const webText = await suggestion.getText();
@@ -185,6 +233,13 @@ class Commands {
      * input: locator (for all dates), dateUserLikesToSelect
      */
     async selectDateInCalendar(locator, dateUserLikesToSelect) {
+        await browser.waitUntil(async () => {
+            const totalDates = await $$(locator);
+            return totalDates.length >= 0
+        }, {
+            timeout: 60000,
+            timeoutMsg: 'Number of dates in calendar are not more than 1'
+        });
         const allDates = await $$(locator);     // [we1, we2, we3, we4, ...]
         
         for (const dateElement of allDates) {

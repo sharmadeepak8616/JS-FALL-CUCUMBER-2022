@@ -10,9 +10,26 @@ const loginErrorPage = new LoginErrorPage();
 /**
  * Glue code is a regular expression which helps to map Scenario-steps with functions (step-definitions)
  */
-Given(/^I am on facebook$/, async function () {
-    await browser.url('/');
-    await browser.pause(5000);
+Given(/^I am on (facebook|hotels|darksky|yahoo|amazon)$/, async function (urlName) {
+    switch (urlName.toLowerCase()) {
+        case 'facebook':
+            await browser.url('/');
+            break;
+        case 'hotels':
+            await browser.url('https://www.hotels.com');
+            break;
+        case 'darksky':
+            await browser.url('https://www.darksky.net');
+            break;
+        case 'yahoo':
+            await browser.url('https://www.yahoo.com');
+            break;
+        case 'amazon':
+            await browser.url('https://www.amazon.com');
+            break;
+        default:
+            break;
+    }
 });
 
 // When(/^I type '(.*)' as username$/, async function (username) {
@@ -24,7 +41,7 @@ Given(/^I am on facebook$/, async function () {
 // });
 
 
-When(/^I type '(.*)' as (.*)$/, async function (data, field) {
+When(/^I type '(.+)' as (username|password)$/, async function (data, field) {
     switch (field.toLowerCase()) {
         case 'username':
             await loginPage.enterLoginEmail(data);
