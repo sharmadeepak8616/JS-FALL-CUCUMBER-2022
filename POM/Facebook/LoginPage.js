@@ -1,3 +1,4 @@
+const { expect } = require('chai');
 const Commands = require('../Commands');
 
 class LoginPage {
@@ -9,6 +10,7 @@ class LoginPage {
     loginPassLocator = '#pass';
     loginButtonLocator = '<button>';
     createNewAccountLocator = '//a[text()="Create New Account" or text()="Create new account"]';
+    linkNameLocator = ''
 
     // functions to interact with the web-Elements on the LoginPage
     async enterLoginEmail(userEmail) {
@@ -55,6 +57,19 @@ class LoginPage {
 
     async isLoginButtonEnabled() {
         return await this.commands.isWebElementEnabled(this.loginButtonLocator);
+    }
+
+    async clickLinkName(linkName) {
+        await this.commands.clickWebElement(`=${linkName}`);
+    }
+
+    async isMultipleWindowsOpen(expWindowsCount) {
+        console.log(`\n\n this.commands.getHandles().length -> ${(await this.commands.getHandles()).length}`);
+        return (await this.commands.getHandles()).length === expWindowsCount;
+    }
+
+    async getCurrentWindowsCount() {
+        return (await this.commands.getHandles()).length;
     }
 
 

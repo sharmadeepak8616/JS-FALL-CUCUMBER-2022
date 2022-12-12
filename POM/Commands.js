@@ -107,6 +107,31 @@ class Commands {
         return await $(locator).isEnabled();
     }
 
+        /**
+     * Generic function to find if field is displayed
+     * name: isWebElementDisplayed
+     * input: string(locator)
+     */
+    async isWebElementDisplayed(locator) {
+       await $(locator).waitForDisplayed({
+            timeout:120000,
+            timeoutMsg: 'Element is not displayed'
+        });
+        return await (await $(locator)).isDisplayed();
+    }
+
+    /**
+     * Generic function to find if field is selected
+     * name: isWebElementSelected
+     * input: string(locator)
+     */
+    async isWebElementSelected(locator) {
+       await $(locator).waitForDisplayed({
+            timeout:120000,
+            timeoutMsg: 'Element is not displayed'
+        });
+        return await $(locator).isSelected();
+    }
     /**
      * Generic function to get Text of a WebElement
      * name: getTextOfWebElement

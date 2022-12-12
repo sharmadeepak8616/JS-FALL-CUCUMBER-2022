@@ -37,15 +37,16 @@ Feature: Login
         And I click login button
         Then I verify error is displayed
 
+    @login-4 @imp
     Scenario Outline: Verify user gets a new page when click <pageName>
-        When I click on <pageName>
-        Then I verify <pageName> opens in a new window
+        When I click on <pageName> link
+        Then I verify opens in a new window with title "<pageTitle>"
         Examples:
-            | pageName  |
-            | Instagram |
-            | Oculus    |
-            | Meta Pay  |
-            | Portal    |
+            | pageName  | pageTitle                                               |
+            | Instagram | Instagram                                               |
+            | Oculus    | Meta Quest VR headsets, accessories and equipment       |
+            | Meta Pay  | Meta Pay: Simple, Secure, Free Payments                 |
+            | Portal    | Meta Portal – Video calling devices with Alexa built-in |
 
     @login-3 @imp
     Scenario: Verify error for empty login flow

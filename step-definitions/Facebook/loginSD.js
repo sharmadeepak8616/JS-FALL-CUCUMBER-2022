@@ -1,4 +1,4 @@
-const { Given, When } = require("@wdio/cucumber-framework");
+const { Given, When, Then } = require("@wdio/cucumber-framework");
 const LoginPage = require('../../POM/Facebook/LoginPage');
 const LoginErrorPage = require('../../POM/Facebook/LoginErrorPage');
 const { expect } = require("chai");
@@ -85,5 +85,14 @@ When(/^I verify login "(email|password|button)" is enabled$/, async function (fi
             break;
     }
     expect(isFieldEnabled, `Login ${field} is NOT enabled`).to.be.true;
-    
+});
+
+When(/^I click on (.+) link$/, async function (linkName) {
+    this.totalWindowsBeforeClick = await loginPage.getCurrentWindowsCount();
+    await loginPage.clickLinkName(linkName);
+});
+
+Then(/^I verify opens in a new window with title "(.+)"$/, async function (pageTitle) {
+    this.totalWindowsAfterClick = await loginPage.getCurrentWindowsCount();
+    expect(this.totalWindowsBeforeClick + 1, 'Number of windows are not as expected').to.equal(this.totalWindowsAfterClick);
 });
