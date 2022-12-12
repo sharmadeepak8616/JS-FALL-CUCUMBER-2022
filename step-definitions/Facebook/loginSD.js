@@ -40,7 +40,10 @@ Given(/^I am on (facebook|hotels|darksky|yahoo|amazon)$/, async function (urlNam
 //     await loginPage.enterLoginPassword(pwd);
 // });
 
-
+/*
+    I type 'X' as username
+    I type 'X' as password
+*/
 When(/^I type '(.+)' as (username|password)$/, async function (data, field) {
     switch (field.toLowerCase()) {
         case 'username':
@@ -63,7 +66,10 @@ When(/^I verify error is displayed$/, async function () {
     expect(await loginErrorPage.isLoginErrorDisplayed(), 'Login error is not displayed').to.be.true;
 });
 
-When(/^I verify login (.*) is enabled$/, async function (field) {
+/*
+    I verify login "A" is enabled
+*/
+When(/^I verify login "(email|password|button)" is enabled$/, async function (field) {
     let isFieldEnabled = false;
     switch (field.toLowerCase()) {
         case 'email':

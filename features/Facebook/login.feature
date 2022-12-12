@@ -49,9 +49,9 @@ Feature: Login
 
     @login-3 @imp
     Scenario: Verify error for empty login flow
-        And I verify login email is enabled
-        And I verify login password is enabled
-        And I verify login button is enabled
+        And I verify login "email" is enabled
+        And I verify login "password" is enabled
+        And I verify login "button" is enabled
 
 # How to do handle/write DDT in Cucumber (BDD)
 # Ans: using Scenario Outline with Examples
