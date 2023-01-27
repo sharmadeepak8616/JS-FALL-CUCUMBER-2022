@@ -5,6 +5,27 @@ class HomePage {
     commands = new Commands();
 
     // Locators for web-Elements on the HomePage (variables)
+
+    // Language related Locator
+    languageLocator = '//button[@data-stid]//div[contains(@class, "uitk-text-default-theme")]';
+    languageDropdownLocator = '#language-selector';
+    saveButtonLocator = '//button[text()="Save" or text()="Guardar"]'
+
+    // Travelers
+    travelersLocator = '//label[text()="Travelers"]/parent::*'
+    travelersHeadingLocator = '//h3[text()="Travelers"]'
+    adultCountForRoomLocatorStart = '//h3[text()="'
+    adultCountForRoomLocatorEnd = '"]/following-sibling::*//input[@id="traveler_selector_adult_step_input-0"]'
+
+    changeAdultCountForRoomLocatorSt
+    
+    art = '//h3[text()="'
+    decreaseAdultCountForRoomLocatorEnd = '"]/following-sibling::*//input[@id="traveler_selector_adult_step_input-0"]/preceding-sibling::button'
+    increaseAdultCountForRoomLocatorEnd = '"]/following-sibling::*//input[@id="traveler_selector_adult_step_input-0"]/following-sibling::button'
+
+
+
+
     // Destination
     goingToLocator = '//button[@aria-label="Going to"]';
     goingToTypeLocator = '#destination_form_field';
@@ -84,5 +105,81 @@ class HomePage {
         }
     }
 
+    async getSelectedLanguage() {
+        return await this.commands.getTextOfWebElement(this.languageLocator);
+    }
+
+    async changeLanguage(newLanguage) {
+        await this.commands.clickWebElement(this.languageLocator);
+        await this.commands.selectDataInDropdown(this.languageDropdownLocator, newLanguage);
+        await this.commands.clickWebElement(this.saveButtonLocator);
+    }
+
+    async getLanguageFromWeb() {
+        return await this.commands.getTextOfWebElement(this.languageLocator);
+    }
+
+    async getAdultCount(roomNum) {
+        if (!await this.commands.isWebElementDisplayed(this.travelersHeadingLocator)) {
+            await this.commands.clickWebElement(this.travelersLocator);
+        }
+        const adultCountLocator = await this.adultCountForRoomLocatorStart + roomNum + this.adultCountForRoomLocatorEnd;
+        return await this.commands.getAttributeWebElement(adultCountLocator, 'value');
+    }
+
+    //h3[text()=" + Room 1 + "]/following-sibling::*//input[@id="traveler_selector_adult_step_input-0"]/preceding-sibling::button
+    //h3[text()=" + Room 1 + "]/following-sibling::*//input[@id="traveler_selector_adult_step_input-0"]/following-sibling::button
+    
+    //h3[text()='Room 1']/following-sibling::*//input[@id="traveler_selector_adult_step_input-0"]
+    async changeAdultCountInRoom(roomNum, newCount) {
+        if (!await (await $(this.travelersHeadingLocator)).isDisplayed()) {
+            await this.commands.clickWebElement(this.travelersLocator);
+        }
+        const adultCountLocator = await this.adultCountForRoomLocatorStart + roomNum + this.adultCountForRoomLocatorEnd;
+        const count = Number(await this.commands.getAttributeWebElement(adultCountLocator, 'value'));
+
+        const minusBtnLocator = this.changeAdultCountForRoomLocatorStart + roomNum + this.decreaseAdultCountForRoomLocatorEnd;
+        const btnState = await this.commands.getAttributeWebElement(minusBtnLocator, 'disabled');
+
+        let isCountReached = false;
+
+        if (count < newCount) {
+            const changeBtnLocator = this.changeAdultCountForRoomLocatorStart + roomNum + this.increaseAdultCountForRoomLocatorEnd;
+            while (!isCountReached) {
+                await this.commands.clickWebElement(changeBtnLocator);
+                const adultCount = Number(await this.commands.getAttributeWebElement(adultCountLocator, 'value'));
+                if (adultCount === newCount) {
+                    isCountReached = true;
+                }
+            }
+        } else if (count > newCount) {
+            const changeBtnLocator = this.changeAdultCountForRoomLocatorStart + roomNum + this.decreaseAdultCountForRoomLocatorEnd;
+            while (!isCountReached) {
+                await this.commands.clickWebElement(changeBtnLocator);
+                const adultCount = Number(await this.commands.getAttributeWebElement(adultCountLocator, 'value'));
+                if (adultCount === newCount) {
+                    isCountReached = true;
+                }
+            }
+        }
+    }
+
+    async getBtnState(btnName, roomNum) {
+        if (!await (await $(this.travelersHeadingLocator)).isDisplayed()) {
+            await this.commands.clickWebElement(this.travelersLocator);
+        }
+        let btnState = null;
+        switch(btnName) {
+            case 'minus':
+                const minusBtnLocator = this.changeAdultCountForRoomLocatorStart + roomNum + this.decreaseAdultCountForRoomLocatorEnd;
+                btnState = await this.commands.getAttributeWebElement(minusBtnLocator, 'disabled');
+                break;
+            case 'plus':
+                const plusBtnLocator = this.changeAdultCountForRoomLocatorStart + roomNum + this.increaseAdultCountForRoomLocatorEnd;
+                btnState = await this.commands.getAttributeWebElement(plusBtnLocator, 'disabled');
+                break;
+        }
+        return btnState;
+    }
 }
 module.exports = HomePage;

@@ -93,6 +93,7 @@ When(/^I click on (.+) link$/, async function (linkName) {
 });
 
 Then(/^I verify opens in a new window with title "(.+)"$/, async function (pageTitle) {
+    loginPage.waitForNewLinkWindow(this.totalWindowsBeforeClick);
     this.totalWindowsAfterClick = await loginPage.getCurrentWindowsCount();
     expect(this.totalWindowsBeforeClick + 1, 'Number of windows are not as expected').to.equal(this.totalWindowsAfterClick);
 });

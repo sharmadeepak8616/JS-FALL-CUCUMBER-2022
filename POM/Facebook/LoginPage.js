@@ -72,6 +72,11 @@ class LoginPage {
         return (await this.commands.getHandles()).length;
     }
 
+    async waitForNewLinkWindow(numWindowBeforeClick) {
+        // waitFor until number of windows/handles is equals to (this.totalWindowsBeforeClick+1)
+        this.commands.waitForNewWindow(numWindowBeforeClick);
+    }
+
 
 }
 module.exports = LoginPage;

@@ -95,14 +95,14 @@ class Commands {
     async isWebElementEnabled(locator) {
         /*
             1. find the webElement
-            2. if found, check if element is enabled
+            2. if found, check if element is displayed
             3. otherwise, wait for 1-second then start from step-1
 
             do above flow for 30-seconds
         */
-       await $(locator).waitForEnabled({
+        await $(locator).waitForDisplayed({
             timeout:120000,
-            timeoutMsg: 'Element is not enabled'
+            timeoutMsg: 'Element is not displayed'
         });
         return await $(locator).isEnabled();
     }
@@ -150,6 +150,16 @@ class Commands {
             timeoutMsg: 'Element is not displayed'
         });
         return await $(locator).getText();
+    }
+
+    async getTextFromWebElement(element) {
+        /*
+            2. if found, return Text
+            3. otherwise, wait for 1-second then start from step-1
+
+            do above flow for 30-seconds
+        */
+        return await element.getText();
     }
 
     /**
@@ -274,6 +284,21 @@ class Commands {
                 break;
             }
         }
+    }
+
+    async waitForNewWindow(countBefore) {
+        await browser.waitUntil(async () => {
+            const totalHandles = (await browser.getWindowHandles()).length;
+            return countBefore+1 === totalHandles;
+        }, {
+            timeout: 60000,
+            timeoutMsg: 'Number of windows are not as expected'
+        });
+    }
+
+    async scrollToElement(locator) {
+        const element = await $(locator);
+        await element.scrollIntoView();
     }
 
 }
